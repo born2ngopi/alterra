@@ -2,15 +2,17 @@ package factory
 
 import (
 	"github.com/born2ngopi/alterra/basic-echo-mvc/database"
-	"gorm.io/gorm"
+	"github.com/born2ngopi/alterra/basic-echo-mvc/internal/repository"
 )
 
 type Factory struct {
-	DB *gorm.DB
+	// DB             *gorm.DB
+	UserRepository repository.User
 }
 
 func NewFactory() *Factory {
+	db := database.GetConnection()
 	return &Factory{
-		DB: database.GetConnection(),
+		UserRepository: repository.NewUser(db),
 	}
 }

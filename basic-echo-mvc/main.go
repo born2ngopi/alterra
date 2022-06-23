@@ -2,13 +2,15 @@ package main
 
 import (
 	"flag"
+	"os"
+
 	"github.com/born2ngopi/alterra/basic-echo-mvc/database"
 	"github.com/born2ngopi/alterra/basic-echo-mvc/database/migration"
 	"github.com/born2ngopi/alterra/basic-echo-mvc/internal/factory"
 	"github.com/born2ngopi/alterra/basic-echo-mvc/internal/http"
+	"github.com/born2ngopi/alterra/basic-echo-mvc/internal/middleware"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
-	"os"
 )
 
 // load env configuration
@@ -50,6 +52,7 @@ to use this flag:
 
 	f := factory.NewFactory()
 	e := echo.New()
+	middleware.Init(e)
 	http.NewHttp(e, f)
 
 	e.Logger.Fatal(e.Start(":" + os.Getenv("APP_PORT")))
