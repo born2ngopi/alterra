@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: developer-ingress
+
+spec:
+  ingressClassName: nginx-example
+  rules:
+  - http: test.born2ngopi.local
+      paths:
+      - path: /testpath
+        pathType: Prefix
+        backend:
+          service:
+            name: test
+            port:
+              number: 80
