@@ -50,7 +50,8 @@ to use this flag:
 		return
 	}
 
-	f := factory.NewFactory()
+	db := database.GetConnection()
+	f := factory.NewFactory(db)
 	e := echo.New()
 	middleware.Init(e)
 	http.NewHttp(e, f)
