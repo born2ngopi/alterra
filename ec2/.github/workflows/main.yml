@@ -1,0 +1,37 @@
+name: Running CI/CD example
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  deployment:
+    name: "deployment application"
+    runs-on: "ubuntu-latest"
+    steps:
+    - uses: action/checkout@v2
+    - name: configure ssh
+      env:
+        SSH_USER: ${{ secrets.SSH_USERNAME }}
+        SSH_PASS: ${{ secrets.SSH_PASSWORD }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_PASS" >> ~/.ssh/belajar.pem
+        chmod 400 ~/.ssh/belajar.pem
+        cat >>~/.ssh/config <<END
+        Host staging
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/belajar.pem
+          StrictHostKeyChecking=no
+        END
+
+    - name: deploy application
+      run: ssh staging 'docker rm -f $(docker ps -a -q) && docker build . -t needkopi/belajar-ec2:1.0.0 && docker run -d -p 80:8000 --name learn needkopi/belajar-ec2:1.0.0'
+    
+    
